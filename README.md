@@ -8,7 +8,7 @@ A walkthrough of how I investigated and verified a ClickFix social engineering a
 
 ## TL;DR
 
-Microsoft Defender flagged three execution attempts (signature `ClickFixZGA`) between 3:39 and 3:41 PM on March 31, 2026, triggered by a malicious PowerShell command staged through a ClickFix lure delivered via a zip file disguised as photos. All three attempts were blocked with status Removed before any code executed. Rather than stopping at "the AV caught it," I ran a full multi-tool verification: Process Explorer with VirusTotal, Autoruns and Task Scheduler audit, PowerShell script-block log review, %temp% inspection, and a Malwarebytes second-opinion scan. Outcome: no persistence, no second-stage execution, no outbound connections. System confirmed clean end to end.
+Microsoft Defender flagged three execution attempts (signature `ClickFix.ZGA`) between 3:39 and 3:41 PM on March 31, 2026, triggered by a malicious PowerShell command staged through a ClickFix lure delivered via a zip file disguised as photos. All three attempts were blocked with status Removed before any code executed. Rather than stopping at "the AV caught it," I ran a full multi-tool verification: Process Explorer with VirusTotal, Autoruns and Task Scheduler audit, PowerShell script-block log review, %temp% inspection, and a Malwarebytes second-opinion scan. Outcome: no persistence, no second-stage execution, no outbound connections. System confirmed clean end to end.
 
 ---
 
@@ -24,7 +24,7 @@ It works because the user thinks they are following normal instructions rather t
 
 ## Initial Detection
 
-**Trigger:** Microsoft Defender alert `Behavior:Win32/ClickFixZGA` fired three times between 3:39 PM and 3:41 PM on March 31, 2026.
+**Trigger:** Microsoft Defender alert `Trojan:Win32/ClickFix.ZGA` fired three times between 3:39 PM and 3:41 PM on March 31, 2026.
 
 **Defender Protection History captured:**
 - Three blocked execution attempts within a two-minute window
@@ -36,7 +36,7 @@ It works because the user thinks they are following normal instructions rather t
 2. Opened a triage notebook to timestamp every action from this point forward
 3. Decided to treat this as a full incident even though Defender had reported "Removed" status, because three repeated attempts indicated active staging, not a single accidental trigger
 
-<!-- <img src="assets/defender-protection-history.png" width="80%" alt="Defender Protection History showing three blocked ClickFixZGA attempts"/> -->
+<img src="assets/defender-protection-history.png" width="80%" alt="Defender Protection History showing three blocked ClickFix.ZGA attempts"/>
 
 ---
 
@@ -125,7 +125,7 @@ The payload was blocked at the behavioral detection layer before any code execut
 
 What I documented:
 - Time of detection: 3:39 to 3:41 PM, March 31, 2026
-- Detection signature: `Behavior:Win32/ClickFixZGA`
+- Detection signature: `Trojan:Win32/ClickFix.ZGA`
 - Attempts blocked: 3
 - Persistence established: None
 - Outbound connections: None
@@ -137,7 +137,7 @@ What I documented:
 
 | Type | Value | Notes |
 |------|-------|-------|
-| Signature | `Behavior:Win32/ClickFixZGA` | Defender behavioral detection |
+| Signature | `Trogan:Win32/ClickFix.ZGA` | Defender behavioral detection |
 | Command | `powershell.exe -noexit -WorkingDirectory C:\Users\Noah\OneDrive\Desktop\` | The command line Defender caught and blocked |
 | Vector | Zip file disguised as photos with social engineering to open PowerShell in folder | Non-standard ClickFix lure surface |
 | Time | 2026-03-31 15:39 to 15:41 local | Three blocked attempts in window |
